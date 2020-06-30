@@ -1,1 +1,3 @@
-# A Blog App by Furkan and Fatih
+# A Blog App 
+
+React Native + ios + android + firebase
