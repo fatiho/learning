@@ -6,21 +6,32 @@ import HomeScreen from './screens/HomeScreen';
 import LoginScreen from './screens/LoginScreen';
 import RegisterScreen from './screens/RegisterScreen';
 import LoadingScreen from './screens/LoadingScreen';
+import CreateScreen from './screens/CreateScreen';
+import ViewPosts from './screens/ViewPosts';
+import ViewPost from './screens/ViewPost';
+import {decode, encode} from 'base-64';
+
+if (!global.btoa) {  global.btoa = encode }
+
+if (!global.atob) { global.atob = decode } 
 
 var firebaseConfig = {
-  apiKey: "yourkey",
-  authDomain: "yourkey",
-  databaseURL: "yourkey",
-  projectId: "blogapp-21599",
-  storageBucket: "yourkey",
-  messagingSenderId: "yourkey",
-  appId: "yourkey"
+  apiKey: "AIzaSyCZTypZ6uAHMw3ow13WpD4MhK4wD8Fa_Hs",
+  authDomain: "blog-app-7e2a8.firebaseapp.com",
+  databaseURL: "https://blog-app-7e2a8.firebaseio.com",
+  projectId: "blog-app-7e2a8",
+  storageBucket: "blog-app-7e2a8.appspot.com",
+  messagingSenderId: "996802332043",
+  appId: "1:996802332043:web:1713c7aec7d3ec23071b8e"
 };
 
 firebase.initializeApp(firebaseConfig);
 
 const AppStack = createStackNavigator({
   Home: HomeScreen,
+  CreateBlogPost: CreateScreen,
+  ViewAllPosts: ViewPosts,
+  ViewBlog: ViewPost
 
 });
 

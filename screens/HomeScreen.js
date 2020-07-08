@@ -22,6 +22,8 @@ export default class HomeScreen extends React.Component{
         firebase.auth().signOut();
     }
 
+
+
     render() {
         return (
             <View style={styles.container} >
@@ -31,6 +33,17 @@ export default class HomeScreen extends React.Component{
                         Logout
                     </Text>
                 </TouchableOpacity>
+		<TouchableOpacity style={{marginTop: 40 }} onPress={ () => {this.props.navigation.navigate('CreateBlogPost')}} > 
+		    <Text>
+                        Create Blog Post
+		    </Text>
+                </TouchableOpacity>
+		<TouchableOpacity style={{marginTop: 40 }} onPress={ () => {this.props.navigation.navigate('ViewAllPosts')}} > 
+		    <Text>
+                        View My Posts!
+		    </Text>
+                </TouchableOpacity>
+		
             </View>
 
         );
