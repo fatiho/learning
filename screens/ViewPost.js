@@ -1,108 +1,114 @@
-
 import React from 'react';
-import {
-  StyleSheet,
-  View,
-  Text,
-  TouchableOpacity
-} from 'react-native';
+import {StyleSheet, View, Text, TouchableOpacity} from 'react-native';
 import * as firebase from 'firebase';
 import 'firebase/firestore';
+import functions from '@react-native-firebase/functions';
 
 var arry = [];
 var title = [];
 var id = [];
 
+export default class ViewPost extends React.Component {
+  state = {
+    email: '',
+    displayName: '',
+    posts: null,
+    ids: null,
+  };
+  getAllPosts = () => {
+    var array = [];
+    var titles = [];
+    var ids = [];
+    var itemId = this.props.navigation.state.params.itemId;
+    console.log(this.props.navigation.state.params.itemId);
+    var cool = functions()
+      .httpsCallable('getPost')({
+        email: itemId,
+      })
+      .then((response) => {
+        console.log('WOWZA');
+        console.log(response.data);
+        arry = response.data.a;
+        title = response.data.b;
+        id = response.data.c;
+      });
+    console.log('works');
+    console.log(cool);
+    //var one = JSON.stringify(itemId);
+    // this.state.posts = firebase.firestore().collection('users').get();
+    // firebase
+    //   .firestore()
+    //   .collection('users')
+    //   .get()
+    //   .then((querySnapshot) => {
+    //     querySnapshot.forEach((doc) => {
+    //       if (doc.data().name == itemId) {
+    //         console.log('BOO YAH');
+    //         console.log(`${doc.id} => ${doc.data().userId}`);
+    //         array.push(doc.data().post);
+    //         titles.push(doc.data().name);
+    //         ids.push(doc.id);
+    //         console.log(array.length);
+    //       }
+    //     });
+    //     console.log('one ' + array.toString());
+    //     arry = array;
+    //     title = titles;
+    //     id = ids;
+    //     console.log(arry[0]);
+    //   });
+  };
 
-export default class ViewPost extends React.Component{
-    
+  deletePlz = () => {
+    var cool = functions().httpsCallable('deletePost')({
+      email: id[0],
+    });
+    // firebase
+    //   .firestore()
+    //   .collection('users')
+    //   .doc(id[0])
+    //   .delete()
+    //   .then(function () {
+    //     console.log('Document successfully deleted!');
+    //   })
+    //   .catch(function (error) {
+    //     console.error('Error removing document: ', error);
+    //   });
 
-    state = {
-        email: "",
-        displayName: "",
-	posts: null,
-	ids: null
-    }
-    getAllPosts = () => {
-	var array = [];
-	var titles = [];
-	var ids = [];
-	var itemId = this.props.navigation.state.params.itemId;
-	console.log(this.props.navigation.state.params.itemId);
-	//var one = JSON.stringify(itemId);
-	this.state.posts = firebase.firestore().collection("users").get()
-	firebase.firestore().collection("users").get().then((querySnapshot) => {
-    		querySnapshot.forEach((doc) => {
-			
-			if (doc.data().name == itemId) {
-				console.log("BOO YAH");
-				console.log(`${doc.id} => ${doc.data().userId}`);
-				array.push(doc.data().post)
-				titles.push(doc.data().name)
-				ids.push(doc.id)
-				console.log(array.length)
-			}
-        		
-			
-    		});
-		console.log("one " + array.toString());
-		arry = array
-		title = titles
-		id = ids
-		console.log(arry[0]);
-	});
-	
+    this.props.navigation.navigate('ViewAllPosts');
+  };
 
-    }
+  render() {
+    return (
+      <View style={styles.container}>
+        <Text>Hi {firebase.auth().currentUser.email}</Text>
+        <Text>{this.getAllPosts()}</Text>
+        {arry.map((num) => (
+          <Text> {num} </Text>
+        ))}
 
-    deletePlz = () => {
-	firebase.firestore().collection("users").doc(id[0]).delete().then(function() {
-    		console.log("Document successfully deleted!");
-		
-	}).catch(function(error) {
-    		console.error("Error removing document: ", error);
-	});
-	
-	this.props.navigation.navigate('ViewAllPosts');
-	
+        <TouchableOpacity
+          style={{marginTop: 48}}
+          onPress={() => this.deletePlz()}>
+          <Text>Delete</Text>
+        </TouchableOpacity>
 
-    }
-
-
-
-    render() {
-        return (
-            <View style={styles.container} >
-                <Text>Hi {firebase.auth().currentUser.email}</Text>
-		<Text>{this.getAllPosts()}</Text>
-		{arry.map(num => (
-		    	<Text> {num} </Text>
-          		
-        	))}
-
-		<TouchableOpacity style={{marginTop: 48 }} onPress={ () => this.deletePlz()} > 
-		    <Text>
-                        Delete
-		    </Text>
-                </TouchableOpacity>
-                
-		<TouchableOpacity style={{marginTop: 54 }} onPress={ () => {this.props.navigation.navigate('ViewAllPosts')}} > 
-		    <Text>
-                        Go Back
-		    </Text>
-                </TouchableOpacity>
-		
-            </View>
-
-        );
-    }
+        <TouchableOpacity
+          style={{marginTop: 54}}
+          onPress={() => {
+            this.props.navigation.navigate('ViewAllPosts');
+          }}>
+          <Text>Go Back</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1 ,
-        justifyContent: 'center',
-        alignItems: 'center',
-
-    }
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 });
